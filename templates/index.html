@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UberLucro - Controle de Ganhos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>🚗 UberLucro</h1>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-section="dashboard">
+                    📊 Dashboard
+                </button>
+                <button class="nav-btn" data-section="ganhos">
+                    💰 Ganhos
+                </button>
+                <button class="nav-btn" data-section="abastecimentos">
+                    ⛽ Abastecimentos
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="section-header">
+                    <h2>Dashboard</h2>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Ganhos Registrados</div>
+                        <div class="stat-value" id="total-ganhos">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Semana Atual</div>
+                        <div class="stat-value" id="total-semana">R$ 0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Mês Atual</div>
+                        <div class="stat-value" id="total-mes">R$ 0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Abastecimentos</div>
+                        <div class="stat-value" id="total-abastecimentos">0</div>
+                    </div>
+                </div>
+
+                <div class="recent-section">
+                    <h3>Últimos Ganhos</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Ganho</th>
+                                <th>KM</th>
+                                <th>Média</th>
+                                <th>Lucro</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-ganhos">
+                            <tr><td colspan="5" class="empty-message">Carregando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Ganhos Section -->
+            <section id="ganhos" class="section">
+                <div class="section-header">
+                    <h2>Ganhos</h2>
+                    <button class="btn btn-primary" onclick="toggleForm('ganho-form')">+ Novo Ganho</button>
+                </div>
+
+                <!-- Form -->
+                <form id="ganho-form" class="form hidden">
+                    <div class="form-group">
+                        <label for="ganho-valor">Valor Ganho (R$)</label>
+                        <input type="number" id="ganho-valor" step="0.01" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ganho-km">KM Rodado</label>
+                            <input type="number" id="ganho-km" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ganho-media">Média (km/L)</label>
+                            <input type="number" id="ganho-media" step="0.1" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ganho-data">Data (DD-MM-AAAA)</label>
+                        <input type="text" id="ganho-data" placeholder="Deixe em branco para hoje">
+                    </div>
+                    <div class="form-group" id="custolt-field" style="display: none;">
+                        <label for="ganho-custolt">Custo por Litro (R$)</label>
+                        <input type="number" id="ganho-custolt" step="0.01" required>
+                    </div>
+                    <div id="custolt-info" class="info-message"></div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Salvar</button>
+                        <button type="button" class="btn btn-secondary" onclick="toggleForm('ganho-form')">Cancelar</button>
+                    </div>
+                </form>
+
+                <!-- List -->
+                <div class="list-section">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Data</th>
+                                <th>Ganho</th>
+                                <th>KM</th>
+                                <th>Média</th>
+                                <th>Lucro</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ganhos-list">
+                            <tr><td colspan="7" class="empty-message">Carregando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Abastecimentos Section -->
+            <section id="abastecimentos" class="section">
+                <div class="section-header">
+                    <h2>Abastecimentos</h2>
+                    <button class="btn btn-primary" onclick="toggleForm('abastecimento-form')">+ Novo Abastecimento</button>
+                </div>
+
+                <!-- Form -->
+                <form id="abastecimento-form" class="form hidden">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="abastecimento-custo">Custo (R$)</label>
+                            <input type="number" id="abastecimento-custo" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="abastecimento-custolt">Custo por Litro (R$)</label>
+                            <input type="number" id="abastecimento-custolt" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="abastecimento-litrosa">Litros (auto-calculado)</label>
+                        <input type="number" id="abastecimento-litrosa" step="0.01" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="abastecimento-data">Data (DD-MM-AAAA)</label>
+                        <input type="text" id="abastecimento-data" placeholder="Deixe em branco para hoje">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Salvar</button>
+                        <button type="button" class="btn btn-secondary" onclick="toggleForm('abastecimento-form')">Cancelar</button>
+                    </div>
+                </form>
+
+                <!-- List -->
+                <div class="list-section">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Data</th>
+                                <th>Custo</th>
+                                <th>Custo/L</th>
+                                <th>Litros</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="abastecimentos-list">
+                            <tr><td colspan="6" class="empty-message">Carregando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

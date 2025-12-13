@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="/static/css/login.css">
+</head>
+<body>
+    <div id="form_fundo">
+        <h1>Login</h1>
+        <div id="form_frente">
+            <form action="/login" id="login" method="POST">
+                <label for="usuario">Usuario</label>
+                <input type="text" name="usuario" id="usuario" required placeholder="Usuário, e-mail ou telefone"><br><br>
+                <label for="senha" id="senha">Senha</label>
+                <input type="password" name="senha" id="senha" required placeholder="Digite sua senha"><br><br>
+                <button type="submit" id="btn_login">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>Entrar
+                </button> 
+                <button type="button" onclick="window.location.href='{{ url_for('cadastro.cadastro') }}'">
+                    Cadastro
+                </button>
+            </form>
+
+                {% set mensagem = get_flashed_messages() %}
+                {% if mensagem %}
+                <div>
+                    {{  mensagem[0]  }}
+                </div>
+                {% endif %}
+        </div>
+    </div>
+</body>
+</html>

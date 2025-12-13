@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="/static/css/cadastro.css">
+</head>
+<body>
+    <div id="form_fundo">
+        <h1>Cadastro</h1>
+        <div id="form_frente">
+            <form action="/cadastro" id="cadastro" method="post">
+                <label for="usuario">Usuario</label>
+                <input type="text" name="usuario" id="usuario" required placeholder="Digite seu usuário"><br><br>
+                <label for="email">Email</label>
+                <input type="text" name="email" id="email" required placeholder="Digite seu email"><br><br>
+                <label for="telefone">Telefone</label>
+                <input type="tel" name="telefone" id="telefone" required placeholder="Digite seu telefone"><br><br>
+                <label for="senha" id="senha">Senha</label>
+                <input type="password" name="senha" id="senha" required placeholder="Digite sua senha"><br><br>
+                <button type="submit" id="cadastro_button">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>Cadastrar
+                </button> 
+                <button type="button" onclick="window.location.href='{{ url_for('login.home') }}'">
+                    Cancelar
+                </button>
+            </form>
+
+                {% set mensagem = get_flashed_messages() %}
+                {% if mensagem %}
+                <div>
+                    {{  mensagem[0]  }}
+                </div>
+                {% endif %}
+        </div>
+    </div>
+</body>
+</html>

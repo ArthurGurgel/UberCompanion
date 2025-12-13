@@ -14,7 +14,7 @@ def _get_data_automática(data_input):
 
 class Ganho:
     @staticmethod
-    def criar(ganho, kmrodado, mediacar, data, lucro):
+    def criar(user_id, ganho, kmrodado, mediacar, data, lucro):
         conn = db.conectar()
         if conn is None:
             return False
@@ -24,8 +24,8 @@ class Ganho:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO ganhos (ganho, kmrodado, mediacar, data, lucro) VALUES (%s, %s, %s, %s, %s)",
-                (ganho, kmrodado, mediacar, data, lucro)
+                "INSERT INTO ganhos (user_id, ganho, kmrodado, mediacar, data, lucro) VALUES (%s, %s, %s, %s, %s, %s)",
+                (user_id, ganho, kmrodado, mediacar, data, lucro)
             )
             conn.commit()
             cursor.close()
@@ -37,14 +37,14 @@ class Ganho:
             conn.close()
     
     @staticmethod
-    def listar():
+    def listar(user_id):
         conn = db.conectar()
         if conn is None:
             return []
         
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT id, ganho, kmrodado, mediacar, data, lucro FROM ganhos ORDER BY data DESC")
+            cursor.execute("SELECT id, ganho, kmrodado, mediacar, data, lucro FROM ganhos WHERE user_id = %s ORDER BY data DESC", (user_id,))
             resultados = cursor.fetchall()
             resultados = [(r[0], _to_float(r[1]), r[2], _to_float(r[3]), r[4], _to_float(r[5])) for r in resultados]
             cursor.close()
@@ -56,14 +56,14 @@ class Ganho:
             conn.close()
     
     @staticmethod
-    def obter(id):
+    def obter(id, user_id):
         conn = db.conectar()
         if conn is None:
             return None
         
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT id, ganho, kmrodado, mediacar, data, lucro FROM ganhos WHERE id = %s", (id,))
+            cursor.execute("SELECT id, ganho, kmrodado, mediacar, data, lucro FROM ganhos WHERE id = %s AND user_id = %s", (id, user_id))
             resultado = cursor.fetchone()
             cursor.close()
             if resultado:
@@ -76,7 +76,7 @@ class Ganho:
             conn.close()
     
     @staticmethod
-    def atualizar(id, ganho, kmrodado, mediacar, data, lucro):
+    def atualizar(id, user_id, ganho, kmrodado, mediacar, data, lucro):
         conn = db.conectar()
         if conn is None:
             return False
@@ -84,8 +84,8 @@ class Ganho:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                "UPDATE ganhos SET ganho = %s, kmrodado = %s, mediacar = %s, data = %s, lucro = %s WHERE id = %s",
-                (ganho, kmrodado, mediacar, data, lucro, id)
+                "UPDATE ganhos SET ganho = %s, kmrodado = %s, mediacar = %s, data = %s, lucro = %s WHERE id = %s AND user_id = %s",
+                (ganho, kmrodado, mediacar, data, lucro, id, user_id)
             )
             conn.commit()
             cursor.close()
@@ -97,14 +97,14 @@ class Ganho:
             conn.close()
     
     @staticmethod
-    def deletar(id):
+    def deletar(id, user_id):
         conn = db.conectar()
         if conn is None:
             return False
         
         try:
             cursor = conn.cursor()
-            cursor.execute("DELETE FROM ganhos WHERE id = %s", (id,))
+            cursor.execute("DELETE FROM ganhos WHERE id = %s AND user_id = %s", (id, user_id))
             conn.commit()
             cursor.close()
             return True
@@ -115,7 +115,7 @@ class Ganho:
             conn.close()
     
     @staticmethod
-    def total_por_mes(mes):
+    def total_por_mes(mes, user_id):
         conn = db.conectar()
         if conn is None:
             return 0
@@ -124,8 +124,8 @@ class Ganho:
             cursor = conn.cursor()
             search_pattern = f"%{mes}%"
             cursor.execute(
-                "SELECT SUM(lucro) FROM ganhos WHERE data LIKE %s",
-                (search_pattern,)
+                "SELECT SUM(lucro) FROM ganhos WHERE data LIKE %s AND user_id = %s",
+                (search_pattern, user_id)
             )
             total = cursor.fetchone()[0]
             cursor.close()
@@ -137,7 +137,7 @@ class Ganho:
             conn.close()
     
     @staticmethod
-    def total_semana_atual():
+    def total_semana_atual(user_id):
         conn = db.conectar()
         if conn is None:
             return 0
@@ -152,8 +152,8 @@ class Ganho:
             
             cursor.execute("""
                 SELECT SUM(lucro) FROM ganhos 
-                WHERE STR_TO_DATE(data, '%d-%m-%Y') BETWEEN %s AND %s
-            """, (segunda, domingo))
+                WHERE STR_TO_DATE(data, '%d-%m-%Y') BETWEEN %s AND %s AND user_id = %s
+            """, (segunda, domingo, user_id))
             
             resultado = cursor.fetchone()
             cursor.close()
@@ -168,7 +168,7 @@ class Ganho:
 
 class Abastecimento:
     @staticmethod
-    def criar(custo, custolt, data, litrosa):
+    def criar(user_id, custo, custolt, data, litrosa):
         conn = db.conectar()
         if conn is None:
             return False
@@ -178,8 +178,8 @@ class Abastecimento:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO abastecimentos (custo, custolt, data, litrosa) VALUES (%s, %s, %s, %s)",
-                (custo, custolt, data, litrosa)
+                "INSERT INTO abastecimentos (user_id, custo, custolt, data, litrosa) VALUES (%s, %s, %s, %s, %s)",
+                (user_id, custo, custolt, data, litrosa)
             )
             conn.commit()
             cursor.close()
@@ -191,14 +191,14 @@ class Abastecimento:
             conn.close()
     
     @staticmethod
-    def listar():
+    def listar(user_id):
         conn = db.conectar()
         if conn is None:
             return []
         
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT id, custo, custolt, data, litrosa FROM abastecimentos ORDER BY data DESC")
+            cursor.execute("SELECT id, custo, custolt, data, litrosa FROM abastecimentos WHERE user_id = %s ORDER BY data DESC", (user_id,))
             resultados = cursor.fetchall()
             converted = []
             for r in resultados:
@@ -218,14 +218,14 @@ class Abastecimento:
             conn.close()
     
     @staticmethod
-    def obter(id):
+    def obter(id, user_id):
         conn = db.conectar()
         if conn is None:
             return None
         
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT id, custo, custolt, data, litrosa FROM abastecimentos WHERE id = %s", (id,))
+            cursor.execute("SELECT id, custo, custolt, data, litrosa FROM abastecimentos WHERE id = %s AND user_id = %s", (id, user_id))
             resultado = cursor.fetchone()
             cursor.close()
             if resultado:
@@ -238,7 +238,7 @@ class Abastecimento:
             conn.close()
     
     @staticmethod
-    def atualizar(id, custo, custolt, data, litrosa):
+    def atualizar(id, user_id, custo, custolt, data, litrosa):
         conn = db.conectar()
         if conn is None:
             return False
@@ -246,8 +246,8 @@ class Abastecimento:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                "UPDATE abastecimentos SET custo = %s, custolt = %s, data = %s, litrosa = %s WHERE id = %s",
-                (custo, custolt, data, litrosa, id)
+                "UPDATE abastecimentos SET custo = %s, custolt = %s, data = %s, litrosa = %s WHERE id = %s AND user_id = %s",
+                (custo, custolt, data, litrosa, id, user_id)
             )
             conn.commit()
             cursor.close()
@@ -259,14 +259,14 @@ class Abastecimento:
             conn.close()
     
     @staticmethod
-    def deletar(id):
+    def deletar(id, user_id):
         conn = db.conectar()
         if conn is None:
             return False
         
         try:
             cursor = conn.cursor()
-            cursor.execute("DELETE FROM abastecimentos WHERE id = %s", (id,))
+            cursor.execute("DELETE FROM abastecimentos WHERE id = %s AND user_id = %s", (id, user_id))
             conn.commit()
             cursor.close()
             return True
@@ -277,14 +277,14 @@ class Abastecimento:
             conn.close()
     
     @staticmethod
-    def obter_ultimo_custolt():
+    def obter_ultimo_custolt(user_id):
         conn = db.conectar()
         if conn is None:
             return None
         
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT custolt FROM abastecimentos ORDER BY id DESC LIMIT 1")
+            cursor.execute("SELECT custolt FROM abastecimentos WHERE user_id = %s ORDER BY id DESC LIMIT 1", (user_id,))
             resultado = cursor.fetchone()
             cursor.close()
             
@@ -294,5 +294,123 @@ class Abastecimento:
         except Exception as e:
             print(f"Erro ao obter último custolt: {e}")
             return None
+        finally:
+            conn.close()
+class User:
+    @staticmethod
+    def criar_usuario(usuario, email, telefone, senha):
+        """Cria um novo usuário. Retorna (True, None) em sucesso ou (False, mensagem) em erro."""
+        conn = db.conectar()
+        if conn is None:
+            return False, "Erro ao conectar ao banco de dados"
+
+        try:
+            cursor = conn.cursor()
+            # Verificar se já existe pelo email ou usuário
+            cursor.execute("SELECT id FROM usuarios WHERE email = %s OR usuario = %s OR telefone = %s", (email, usuario, telefone))
+            existe = cursor.fetchone()
+            if existe:
+                cursor.close()
+                return False, "Usuário, email ou telefone já cadastrado"
+
+            # Hash da senha
+            from werkzeug.security import generate_password_hash
+            senha_hash = generate_password_hash(senha)
+
+            cursor.execute("INSERT INTO usuarios (usuario, telefone, email, senha) VALUES (%s, %s, %s, %s)",
+                           (usuario, telefone, email, senha_hash))
+            conn.commit()
+            cursor.close()
+            return True, None
+        except Exception as e:
+            print(f"Erro ao criar usuário: {e}")
+            return False, "Erro ao criar usuário"
+        finally:
+            conn.close()
+
+    @staticmethod
+    def autenticar(login, senha):
+        """Autentica um usuário por usuário/email/telefone. Retorna dicionário do usuário (sem senha) ou None."""
+        conn = db.conectar()
+        if conn is None:
+            return None
+
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, usuario, telefone, email, senha FROM usuarios WHERE usuario = %s OR email = %s OR telefone = %s LIMIT 1", (login, login, login))
+            row = cursor.fetchone()
+            cursor.close()
+            if not row:
+                return None
+
+            user_id, usuario, telefone, email, senha_hash = row
+            from werkzeug.security import check_password_hash
+            if check_password_hash(senha_hash, senha):
+                return {
+                    'id': user_id,
+                    'usuario': usuario,
+                    'telefone': telefone,
+                    'email': email
+                }
+            return None
+        except Exception as e:
+            print(f"Erro ao autenticar usuário: {e}")
+            return None
+        finally:
+            conn.close()
+
+    @staticmethod
+    def atualizar_perfil(user_id, usuario, email, telefone):
+        conn = db.conectar()
+        if conn is None:
+            return False, "Erro ao conectar ao banco"
+
+        try:
+            cursor = conn.cursor()
+            # verificar se email/usuario em uso por outro id
+            cursor.execute("SELECT id FROM usuarios WHERE (email = %s OR usuario = %s OR telefone = %s) AND id != %s LIMIT 1", (email, usuario, telefone, user_id))
+            existe = cursor.fetchone()
+            if existe:
+                cursor.close()
+                return False, "Email, usuário ou telefone já em uso"
+
+            cursor.execute("UPDATE usuarios SET usuario = %s, email = %s, telefone = %s WHERE id = %s", (usuario, email, telefone, user_id))
+            conn.commit()
+            cursor.close()
+            return True, None
+        except Exception as e:
+            print(f"Erro ao atualizar perfil: {e}")
+            return False, "Erro ao atualizar perfil"
+        finally:
+            conn.close()
+
+    @staticmethod
+    def alterar_senha(user_id, senha_atual, senha_nova):
+        conn = db.conectar()
+        if conn is None:
+            return False, "Erro ao conectar ao banco"
+
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT senha FROM usuarios WHERE id = %s", (user_id,))
+            row = cursor.fetchone()
+            if not row:
+                cursor.close()
+                return False, "Usuário não encontrado"
+
+            from werkzeug.security import check_password_hash, generate_password_hash
+            senha_hash = row[0]
+            if not check_password_hash(senha_hash, senha_atual):
+                cursor.close()
+                return False, "Senha atual incorreta"
+
+            nova_hash = generate_password_hash(senha_nova)
+            cursor.execute("UPDATE usuarios SET senha = %s WHERE id = %s", (nova_hash, user_id))
+            conn.commit()
+            cursor.close()
+            return True, None
+        except Exception as e:
+            print(f"Erro ao alterar senha: {e}")
+            return False, "Erro ao alterar senha"
         finally:
             conn.close()

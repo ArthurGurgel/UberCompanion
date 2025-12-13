@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Meu Perfil</h1>
+        <form action="{{ url_for('login.profile_update') }}" method="post">
+            <label>Usuário</label>
+            <input type="text" name="usuario" value="{{ usuario }}" required>
+            <label>Email</label>
+            <input type="email" name="email" value="{{ email }}" required>
+            <label>Telefone</label>
+            <input type="tel" name="telefone" value="{{ telefone }}">
+            <button type="submit">Salvar</button>
+        </form>
+
+        <h2>Alterar senha</h2>
+        <form action="{{ url_for('login.change_password') }}" method="post">
+            <label>Senha atual</label>
+            <input type="password" name="senha_atual" required>
+            <label>Nova senha</label>
+            <input type="password" name="senha_nova" required>
+            <label>Confirmar nova senha</label>
+            <input type="password" name="senha_nova2" required>
+            <button type="submit">Alterar senha</button>
+        </form>
+
+        <p><a href="{{ url_for('dashboard.index') }}">Voltar ao dashboard</a></p>
+    </div>
+</body>
+</html>

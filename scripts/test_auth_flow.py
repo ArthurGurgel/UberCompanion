@@ -28,3 +28,28 @@ with app.test_client() as c:
     r4 = c.post('/login', data={'usuario': data['email'], 'senha': data['senha']}, follow_redirects=True)
     print('POST /login ->', r4.status_code)
     print(r4.data.decode()[:400])
+
+    # Now create a ganho and abastecimento for this user via API
+    ganho_payload = {'ganho': 100.0, 'kmrodado': 50, 'mediacar': 10, 'data': '12-12-2025'}
+    r5 = c.post('/api/ganhos', json=ganho_payload)
+    print('POST /api/ganhos ->', r5.status_code, r5.json)
+
+    abastecimento_payload = {'custo': 200.0, 'custolt': 5.0, 'data': '12-12-2025'}
+    r6 = c.post('/api/abastecimentos', json=abastecimento_payload)
+    print('POST /api/abastecimentos ->', r6.status_code, r6.json)
+
+    # Now register another user and ensure they don't see first user's ganhos
+    suffix2 = random.randint(100000,199999)
+    data2 = {
+        'usuario': f'testuser{suffix2}',
+        'email': f'test{suffix2}@example.com',
+        'telefone': '88888888',
+        'senha': 'senha123'
+    }
+    r7 = c.post('/cadastro', data=data2, follow_redirects=True)
+    r8 = c.post('/login', data={'usuario': data2['email'], 'senha': data2['senha']}, follow_redirects=True)
+    print('Login user2 ->', r8.status_code)
+
+    # user2 listar ganhos -> should be empty or not include user1's item
+    r9 = c.get('/api/ganhos')
+    print('GET /api/ganhos after login user2 ->', r9.status_code, r9.json)

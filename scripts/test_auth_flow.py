@@ -53,3 +53,14 @@ with app.test_client() as c:
     # user2 listar ganhos -> should be empty or not include user1's item
     r9 = c.get('/api/ganhos')
     print('GET /api/ganhos after login user2 ->', r9.status_code, r9.json)
+
+    # Check dashboard values for user1 and user2 isolation
+    # Log back as user1
+    r10 = c.post('/login', data={'usuario': data['email'], 'senha': data['senha']}, follow_redirects=True)
+    r11 = c.get('/api/dashboard')
+    print('User1 /api/dashboard ->', r11.status_code, r11.json)
+
+    # Login back as user2
+    r12 = c.post('/login', data={'usuario': data2['email'], 'senha': data2['senha']}, follow_redirects=True)
+    r13 = c.get('/api/dashboard')
+    print('User2 /api/dashboard ->', r13.status_code, r13.json)

@@ -49,8 +49,26 @@ function showSection(sectionId) {
     sections.forEach(s => s.classList.remove('active'));
     const section = document.getElementById(sectionId);
     if (section) {
+        // When switching sections, close any open edit forms to avoid stale state
+        closeForms();
         section.classList.add('active');
     }
+}
+
+function closeForms() {
+    // Hide ganho form if present
+    const ganhoForm = document.getElementById('ganho-form');
+    if (ganhoForm && !ganhoForm.classList.contains('hidden')) {
+        ganhoForm.classList.add('hidden');
+    }
+    // Hide abastecimento form if present
+    const abastecimentoForm = document.getElementById('abastecimento-form');
+    if (abastecimentoForm && !abastecimentoForm.classList.contains('hidden')) {
+        abastecimentoForm.classList.add('hidden');
+    }
+    // reset editing state
+    editingId = null;
+    editingType = null;
 }
 
 // ==================== FORMS ====================

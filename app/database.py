@@ -11,14 +11,14 @@ except Exception:
     pass
 
 class Database:
-    def __init__(self, host='joao.palmas.br', user='joaopa29_arthur', password='arthur2025', database='joaopa29_arthur', port=3306):
+    def __init__(self):
         import os
         # Prefer environment variables for credentials (safer for commits/pushes)
-        self.host = os.environ.get('DB_HOST', host)
-        self.user = os.environ.get('DB_USER', user)
-        self.password = os.environ.get('DB_PASSWORD', password)
-        self.database = os.environ.get('DB_NAME', database)
-        self.port = int(os.environ.get('DB_PORT', port))
+        self.host = os.environ.get('DB_HOST')
+        self.user = os.environ.get('DB_USER')
+        self.password = os.environ.get('DB_PASSWORD')
+        self.database = os.environ.get('DB_NAME')
+        self.port = int(os.environ.get('DB_PORT'))
     
     def conectar(self):
         try:

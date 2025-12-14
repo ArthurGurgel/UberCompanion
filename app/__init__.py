@@ -11,7 +11,7 @@ def create_app():
     app = Flask(__name__, template_folder='../templates', static_folder='../static')
     # secret key necessária para session/flash - troque em produção
     import os
-    app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-please-change')
+    app.secret_key = os.environ.get('SECRET_KEY')
     CORS(app)
     
     # Registrar blueprints

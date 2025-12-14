@@ -110,6 +110,13 @@ body {
     overflow-x: auto;
 }
 
+/* inner wrapper to center content and limit width on very large monitors */
+.main-content .content-inner {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 .section {
     display: none;
     animation: fadeIn 0.3s ease;
@@ -221,7 +228,8 @@ body {
 }
 
 .chart-card canvas {
-    max-height: 300px;
+    width: 100% !important;
+    height: 320px !important;
 }
 
 /* ==================== FORMS ==================== */
@@ -648,6 +656,25 @@ body {
     .section-header .btn {
         width: 100%;
     }
+
+    /* Mobile: hide nav by default and toggle via body.nav-open */
+    .nav-menu {
+        display: none;
+        position: absolute;
+        left: 0;
+        top: 60px;
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+        z-index: 1200;
+        flex-direction: column;
+        gap: 8px;
+    }
+    body.nav-open .nav-menu {
+        display: flex;
+    }
+
+    .sidebar-toggle { display: inline-block; }
 }
 
 /* Mobile Pequeno - 480px */

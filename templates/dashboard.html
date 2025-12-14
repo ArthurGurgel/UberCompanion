@@ -25,32 +25,6 @@
                 <button class="nav-btn" data-section="abastecimentos">
                     ⛽ Abastecimentos
                 </button>
-                <button class="nav-btn" data-section="relatorios">
-                    📈 Relatórios
-                </button>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
-                <div class="nav-separator" aria-hidden="true"></div>
                 <div class="nav-separator" aria-hidden="true"></div>
                 <div class="nav-separator" aria-hidden="true"></div>
                 <div class="nav-separator" aria-hidden="true"></div>                
@@ -69,8 +43,9 @@
             <!-- Dashboard Section -->
             <section id="dashboard" class="section active">
                 <div class="section-header">
+                    <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Abrir menu">☰</button>
                     <h2>Dashboard</h2>
-                <a class="btn btn-primary" href="{{ url_for('login.profile') }}">👤 Perfil</a>
+                    <a class="btn btn-primary" href="{{ url_for('login.profile') }}">👤 Perfil</a>
                 </div>
                 
                 <div class="stats-grid">
@@ -283,6 +258,7 @@
         </main>
     </div>
 
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
 </body>
 </html>

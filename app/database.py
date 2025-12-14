@@ -14,11 +14,24 @@ class Database:
     def __init__(self):
         import os
         # Prefer environment variables for credentials (safer for commits/pushes)
-        self.host = os.environ.get('DB_HOST')
-        self.user = os.environ.get('DB_USER')
-        self.password = os.environ.get('DB_PASSWORD')
-        self.database = os.environ.get('DB_NAME')
-        self.port = int(os.environ.get('DB_PORT'))
+        # Required vars: DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
+        # Optional: DB_PORT (defaults to 3306)
+        def _env(name, required=False, default=None):
+            v = os.environ.get(name, default)
+            if required and (v is None or v == ''):
+                raise RuntimeError(f"Missing required environment variable: {name}.\n" \
+                                   f"Set {name} in your environment (e.g., Render dashboard -> Environment -> Environment Variables) or provide a .env for local development.")
+            return v
+
+        self.host = _env('DB_HOST', required=True)
+        self.user = _env('DB_USER', required=True)
+        self.password = _env('DB_PASSWORD', required=True)
+        self.database = _env('DB_NAME', required=True)
+        port_val = _env('DB_PORT', required=False, default='3306')
+        try:
+            self.port = int(port_val)
+        except Exception:
+            raise RuntimeError(f"Invalid DB_PORT value: {port_val}. It must be a number (e.g. 3306).")
     
     def conectar(self):
         try:

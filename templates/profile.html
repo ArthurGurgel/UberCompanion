@@ -4,33 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/profile.css">
 </head>
 <body>
-    <div class="container">
+    <div id="form_fundo">
         <h1>Meu Perfil</h1>
-        <form action="{{ url_for('login.profile_update') }}" method="post">
-            <label>Usuário</label>
-            <input type="text" name="usuario" value="{{ usuario }}" required>
-            <label>Email</label>
-            <input type="email" name="email" value="{{ email }}" required>
-            <label>Telefone</label>
-            <input type="tel" name="telefone" value="{{ telefone }}">
-            <button type="submit">Salvar</button>
-        </form>
 
-        <h2>Alterar senha</h2>
-        <form action="{{ url_for('login.change_password') }}" method="post">
-            <label>Senha atual</label>
-            <input type="password" name="senha_atual" required>
-            <label>Nova senha</label>
-            <input type="password" name="senha_nova" required>
-            <label>Confirmar nova senha</label>
-            <input type="password" name="senha_nova2" required>
-            <button type="submit">Alterar senha</button>
-        </form>
+        <section id="profile-section">
+            <form id="profile-form" action="{{ url_for('login.profile_update') }}" method="post">
+                <label>Usuário</label>
+                <input type="text" name="usuario" value="{{ usuario }}" required>
+                <label>Email</label>
+                <input type="email" name="email" value="{{ email }}" required>
+                <label>Telefone</label>
+                <input type="tel" name="telefone" value="{{ telefone }}">
+                <div style="margin-top:12px; display:flex; gap:8px; justify-content:center;">
+                    <button type="submit">Salvar</button>
+                    <button type="button" id="show-password">Alterar senha</button>
+                </div>
+            </form>
+        </section>
 
-        <p><a href="{{ url_for('dashboard.index') }}">Voltar ao dashboard</a></p>
+        <section id="password-section" class="hidden">
+            <form id="password-form" action="{{ url_for('login.change_password') }}" method="post">
+                <label>Senha atual</label>
+                <input type="password" name="senha_atual" required>
+                <label>Nova senha</label>
+                <input type="password" name="senha_nova" required>
+                <label>Confirmar nova senha</label>
+                <input type="password" name="senha_nova2" required>
+                <div style="margin-top:12px; display:flex; gap:6px; justify-content:center;">
+                    <button type="submit">Alterar senha</button>
+                    <button type="button" id="back-to-profile">Cancelar</button>
+                </div>
+            </form>
+        </section>
+        <div style="margin-top:1px; display:flex;justify-content:border;">
+            <button type="button" onclick="window.location.href='{{ url_for('dashboard.index') }}'">Voltar</button>
+            <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+        </div>
     </div>
 </body>
 </html>

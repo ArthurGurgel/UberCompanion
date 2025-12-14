@@ -3,7 +3,7 @@ const API_BASE = '/api';
 let editingId = null;
 let editingType = null;
 let ganhos_chart = null;
-let pie_chart = null;
+let semanas_chart = null;
 
 // ==================== INICIALIZAÇÃO ====================
 
@@ -20,13 +20,16 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupNavigation() {
     const navBtns = document.querySelectorAll('.nav-btn');
     navBtns.forEach(btn => {
+        // Skip anchor links that navigate to other pages (e.g., Perfil / Sair)
+        if (btn.tagName === 'A') return;
+
         btn.addEventListener('click', () => {
             const section = btn.dataset.section;
             showSection(section);
-            
+
             navBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
+
             if (section === 'ganhos') {
                 loadGanhos();
             } else if (section === 'abastecimentos') {
@@ -432,6 +435,21 @@ async function loadDashboard() {
 // ==================== GRÁFICOS ====================
 
 function carregarGraficos(ganhos) {
+    // Utility: parse dates in 'DD-MM-YYYY' or 'DD/MM/YYYY' into numeric parts and normalized 'YYYY-MM-DD'
+    function parseDateParts(s) {
+        if (!s) return null;
+        const sep = s.includes('-') ? '-' : (s.includes('/') ? '/' : null);
+        if (!sep) return null;
+        const parts = s.split(sep);
+        if (parts.length !== 3) return null;
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10);
+        const year = parseInt(parts[2], 10);
+        if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) return null;
+        const mm = String(month).padStart(2, '0');
+        const dd = String(day).padStart(2, '0');
+        return { day, month, year, ymd: `${year}-${mm}-${dd}` };
+    }
     // Preparar dados dos últimos 7 dias
     const ultimosDias = [];
     const dados = [];
@@ -442,14 +460,15 @@ function carregarGraficos(ganhos) {
         const dataStr = data.toLocaleDateString('pt-BR', { weekday: 'short', month: 'numeric', day: 'numeric' });
         ultimosDias.push(dataStr);
         
-        const dataFormatada = data.toLocaleDateString('pt-BR');
+        const targetYmd = `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}`;
         const total = ganhos
-            .filter(g => g.data === dataFormatada)
-            .reduce((sum, g) => sum + g.lucro, 0);
+            .map(g => ({ parts: parseDateParts(g.data), lucro: Number(g.lucro) || 0 }))
+            .filter(x => x.parts && x.parts.ymd === targetYmd)
+            .reduce((sum, x) => sum + x.lucro, 0);
         dados.push(total);
     }
 
-    // Gráfico de linha
+    // Gráfico de barras - Lucro Diário (visualmente igual ao por semanas)
     const ctx1 = document.getElementById('ganhos-chart');
     if (ctx1) {
         if (ganhos_chart) {
@@ -457,68 +476,94 @@ function carregarGraficos(ganhos) {
         }
 
         ganhos_chart = new Chart(ctx1, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: ultimosDias,
                 datasets: [{
                     label: 'Lucro Diário (R$)',
                     data: dados,
-                    borderColor: '#FF6B35',
-                    backgroundColor: 'rgba(255, 107, 53, 0.1)',
-                    tension: 0.4,
-                    fill: true
+                    backgroundColor: '#004E89',
+                    borderRadius: 6
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
                 plugins: {
-                    legend: {
-                        display: true
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const val = context.parsed.y ?? context.parsed;
+                                return `R$ ${Number(val).toFixed(2)}`;
+                            }
+                        }
                     }
                 },
                 scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                    y: { beginAtZero: true }
                 }
             }
         });
     }
 
-    // Gráfico de pizza
-    const ctx2 = document.getElementById('pie-chart');
-    if (ctx2 && dados.length > 0) {
-        if (pie_chart) {
-            pie_chart.destroy();
-        }
+    // Gráfico por semanas do mês (barras)
+    // Função utilitária para converter 'DD-MM-YYYY' para Date
+    function parseDateBR(s) {
+        if (!s) return null;
+        const parts = s.split('-');
+        if (parts.length !== 3) return null;
+        // YYYY-MM-DD
+        return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+    }
 
-        pie_chart = new Chart(ctx2, {
-            type: 'doughnut',
+    const ctx2 = document.getElementById('semanas-chart');
+    if (ctx2) {
+        // calcular semanas do mês atual
+        const hoje = new Date();
+        const month = hoje.getMonth();
+        const year = hoje.getFullYear();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const numWeeks = Math.ceil(daysInMonth / 7);
+
+        const weekLabels = Array.from({ length: numWeeks }, (_, i) => `Semana ${i + 1}`);
+        const weekTotals = new Array(numWeeks).fill(0);
+
+        const ganhosMes = ganhos.map(g => ({ parts: parseDateParts(g.data), lucro: Number(g.lucro) || 0 })).filter(x => x.parts && x.parts.year === year && x.parts.month - 1 === month);
+
+        ganhosMes.forEach(g => {
+            const day = g.parts.day;
+            const weekIndex = Math.max(0, Math.min(numWeeks - 1, Math.ceil(day / 7) - 1));
+            weekTotals[weekIndex] += g.lucro;
+        });
+
+        if (semanas_chart) semanas_chart.destroy();
+
+        semanas_chart = new Chart(ctx2, {
+            type: 'bar',
             data: {
-                labels: ultimosDias,
+                labels: weekLabels,
                 datasets: [{
-                    data: dados,
-                    backgroundColor: [
-                        '#FF6B35',
-                        '#004E89',
-                        '#06A77D',
-                        '#F77F00',
-                        '#D62828',
-                        '#8338EC',
-                        '#FFBE0B'
-                    ]
+                    label: 'Lucro por Semana (R$)',
+                    data: weekTotals,
+                    backgroundColor: '#004E89'
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
                 }
             }
         });
+    }
+    // Debug helper: if enabled in browser console, print day mapping
+    if (window.DEBUG_DASHBOARD) {
+        console.log('Daily chart dates and totals:', ultimosDias.map((label, idx) => ({ label, total: dados[idx] })));
+        console.log('Weekly totals:', weekTotals);
     }
 }
 

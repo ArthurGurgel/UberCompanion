@@ -282,6 +282,7 @@ def do_login():
 @app_home.route('/logout')
 def logout():
     session.pop('user', None)
+    session.pop('user_id', None)
     flash('Você saiu da sua conta')
     return redirect(url_for('login.home'))
 

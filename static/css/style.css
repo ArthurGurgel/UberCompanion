@@ -77,6 +77,7 @@ body {
     font-size: 16px;
     transition: all 0.3s ease;
     text-align: left;
+    text-decoration: none;
 }
 
 .nav-btn:hover {
@@ -307,6 +308,7 @@ body {
 .btn-primary {
     background: var(--primary-color);
     color: white;
+    text-decoration: none;
 }
 
 .btn-primary:hover {
@@ -675,6 +677,14 @@ body {
         font-size: 11px;
         padding: 6px 8px;
     }
+
+/* Separator between menu groups */ 
+.nav-separator {
+    height: 1px;
+    background: rgba(255,255,255,0.12);
+    margin: 10px 0;
+    border-radius: 2px;
+}
 
     .btn {
         padding: 8px 16px;

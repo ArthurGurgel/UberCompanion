@@ -28,6 +28,35 @@
                 <button class="nav-btn" data-section="relatorios">
                     📈 Relatórios
                 </button>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>
+                <div class="nav-separator" aria-hidden="true"></div>                
+                {% if session.get('user') %}
+                <a class="nav-btn" href="{{ url_for('login.logout') }}">🔒 Sair</a>
+                {% endif %}
             </nav>
             <div class="sidebar-footer">
                 <p>Conectado ao MySQL</p>
@@ -41,6 +70,7 @@
             <section id="dashboard" class="section active">
                 <div class="section-header">
                     <h2>Dashboard</h2>
+                <a class="btn btn-primary" href="{{ url_for('login.profile') }}">👤 Perfil</a>
                 </div>
                 
                 <div class="stats-grid">
@@ -73,8 +103,8 @@
                         <canvas id="ganhos-chart"></canvas>
                     </div>
                     <div class="chart-card">
-                        <h3>Distribuição Semanal</h3>
-                        <canvas id="pie-chart"></canvas>
+                        <h3>Ganhos por Semana (mês atual)</h3>
+                        <canvas id="semanas-chart"></canvas>
                     </div>
                 </div>
 

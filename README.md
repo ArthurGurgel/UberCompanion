@@ -5,6 +5,19 @@
 - Este projeto utiliza credenciais de banco de dados em `app/database.py` por padrão. **Recomendo fortemente** colocar suas credenciais em variáveis de ambiente (DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT) antes de publicar.
 - Adicione um arquivo `.env` ao `.gitignore` e carregue variáveis com `python-dotenv` ou exporte no ambiente do servidor. Evite commitar segredos.
 
+### Usando um arquivo `.env` (recomendado para desenvolvimento)
+
+1. Copie o arquivo de exemplo e preencha as credenciais:
+
+```bash
+cp .env.example .env
+# edite .env e preencha suas credenciais
+```
+
+2. O projeto já inclui `python-dotenv` em `requirements.txt`. Quando a aplicação iniciar, as variáveis do `.env` serão carregadas automaticamente (por `python-dotenv`) e usadas por `app/database.py` e `app/__init__.py` para `DB_*` e `SECRET_KEY`.
+
+3. **Importante:** `./.env` está listado em `.gitignore` — não comite o arquivo com suas credenciais.
+
 ## Como publicar no GitHub
 
 1. Crie um repositório no GitHub (via site ou `gh repo create`).

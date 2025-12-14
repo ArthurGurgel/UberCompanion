@@ -2,6 +2,13 @@ import mysql.connector
 from mysql.connector import Error
 from datetime import date
 from decimal import Decimal
+# Carregar variáveis de ambiente de um arquivo .env, se existir
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    # Se python-dotenv não estiver disponível, continuar (variáveis podem vir de ambiente)
+    pass
 
 class Database:
     def __init__(self, host='joao.palmas.br', user='joaopa29_arthur', password='arthur2025', database='joaopa29_arthur', port=3306):

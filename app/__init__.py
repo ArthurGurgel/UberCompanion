@@ -1,4 +1,10 @@
 from flask import Flask
+# Carregar .env para obter SECRET_KEY e outras variáveis antes de criar a app
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
 from flask_cors import CORS
 
 def create_app():

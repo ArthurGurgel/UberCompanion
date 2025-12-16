@@ -13,6 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
     setupForms();
     // Auto-atualizar dashboard a cada 30 segundos
     setInterval(loadDashboard, 30000);
+    // initialize table paginators (after DOM elements exist)
+    try {
+        createTablePaginator({ tbodyId: 'ganhos-list', pageSizeSelectId: 'ganhos-page-size', paginationId: 'ganhos-pagination', infoId: 'ganhos-info' });
+        createTablePaginator({ tbodyId: 'abastecimentos-list', pageSizeSelectId: 'abastecimentos-page-size', paginationId: 'abastecimentos-pagination', infoId: 'abastecimentos-info' });
+    } catch (e) {
+        // function may not exist yet if file loaded in different order; ignore silently
+        console.warn('Paginator init skipped (will initialize on page change if needed).', e);
+    }
 });
 
 // ==================== NAVEGAÇÃO ====================
@@ -124,6 +132,84 @@ function setupForms() {
     }
 }
 
+/* ---------- Table Pagination Utility ---------- */
+function createTablePaginator({ tbodyId, pageSizeSelectId, paginationId, infoId }) {
+    const tbody = document.getElementById(tbodyId);
+    const pageSizeSelect = document.getElementById(pageSizeSelectId);
+    const pagination = document.getElementById(paginationId);
+    const info = document.getElementById(infoId);
+
+    if (!tbody || !pageSizeSelect || !pagination || !info) return;
+
+    let rows = Array.from(tbody.querySelectorAll('tr'));
+    let pageSize = parseInt(pageSizeSelect.value, 10) || 10;
+    let currentPage = 1;
+
+    function refreshRows() {
+        rows = Array.from(tbody.querySelectorAll('tr'));
+        render();
+    }
+
+    function render() {
+        const total = rows.length;
+        const totalPages = Math.max(1, Math.ceil(total / pageSize));
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        // hide all rows
+        rows.forEach(r => r.style.display = 'none');
+
+        // show page rows
+        const start = (currentPage - 1) * pageSize;
+        const end = Math.min(total, start + pageSize);
+        for (let i = start; i < end; i++) rows[i].style.display = '';
+
+        // update info
+        info.textContent = total === 0 ? 'Nenhum registro' : `Exibindo ${start + 1}-${end} de ${total}`;
+
+        // build pagination buttons
+        pagination.innerHTML = '';
+        if (totalPages <= 1) return;
+
+        const prev = document.createElement('button');
+        prev.textContent = '◀';
+        prev.className = 'page-btn';
+        prev.disabled = currentPage === 1;
+        prev.addEventListener('click', () => { currentPage = Math.max(1, currentPage - 1); render(); });
+        pagination.appendChild(prev);
+
+        const range = 3;
+        const startPage = Math.max(1, currentPage - range);
+        const endPage = Math.min(totalPages, currentPage + range);
+        for (let p = startPage; p <= endPage; p++) {
+            const b = document.createElement('button');
+            b.textContent = p;
+            b.className = 'page-btn' + (p === currentPage ? ' active' : '');
+            b.addEventListener('click', () => { currentPage = p; render(); });
+            pagination.appendChild(b);
+        }
+
+        const next = document.createElement('button');
+        next.textContent = '▶';
+        next.className = 'page-btn';
+        next.disabled = currentPage === totalPages;
+        next.addEventListener('click', () => { currentPage = Math.min(totalPages, currentPage + 1); render(); });
+        pagination.appendChild(next);
+    }
+
+    pageSizeSelect.addEventListener('change', () => {
+        pageSize = parseInt(pageSizeSelect.value, 10) || 10;
+        currentPage = 1;
+        render();
+    });
+
+    // observe tbody changes to refresh rows when rows are added/removed
+    const mo = new MutationObserver(() => refreshRows());
+    mo.observe(tbody, { childList: true, subtree: false });
+
+    // initial
+    refreshRows();
+}
+
 // ==================== GANHOS ====================
 
 async function carregarCustolt() {
@@ -203,13 +289,12 @@ async function loadGanhos() {
 
         const tbody = document.getElementById('ganhos-list');
         if (ganhos.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" class="empty-message">❌ Nenhum ganho cadastrado.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="empty-message">❌ Nenhum ganho cadastrado.</td></tr>';
             return;
         }
 
         tbody.innerHTML = ganhos.map(g => `
             <tr>
-                <td>${g.id}</td>
                 <td>${g.data}</td>
                 <td>R$ ${g.ganho.toFixed(2)}</td>
                 <td>${g.kmrodado}</td>
@@ -322,13 +407,12 @@ async function loadAbastecimentos() {
 
         const tbody = document.getElementById('abastecimentos-list');
         if (abastecimentos.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="empty-message">❌ Nenhum abastecimento cadastrado.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="empty-message">❌ Nenhum abastecimento cadastrado.</td></tr>';
             return;
         }
 
         tbody.innerHTML = abastecimentos.map(a => `
             <tr>
-                <td>${a.id}</td>
                 <td>${a.data}</td>
                 <td>R$ ${a.custo.toFixed(2)}</td>
                 <td>R$ ${a.custolt.toFixed(2)}</td>

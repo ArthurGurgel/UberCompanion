@@ -7,32 +7,26 @@
 </head>
 <body>
     <div id="form_fundo">
-        <h1>Login</h1>
-        <div id="form_frente">
-            <form action="/login" id="login" method="POST">
-                <label for="usuario">Usuario</label>
-                <input type="text" name="usuario" id="usuario" required placeholder="Usuário, e-mail ou telefone"><br><br>
-                <label for="senha" id="senha">Senha</label>
-                <input type="password" name="senha" id="senha" required placeholder="Digite sua senha"><br><br>
-                <button type="submit" id="btn_login">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>Entrar
-                </button> 
-                <button type="button" onclick="window.location.href='{{ url_for('cadastro.cadastro') }}'">
-                    Cadastro
-                </button>
-            </form>
+        <main class="main-content">
+            <div id="form_frente">
+                <h1>Login</h1>
+                <form action="/login" id="login" method="POST">
+                    <label for="usuario">Usuario</label>
+                    <input type="text" name="usuario" id="usuario" required placeholder="Usuário, e-mail ou telefone">
+                    <label for="senha" id="senha">Senha</label>
+                    <input type="password" name="senha" id="senha" required placeholder="Digite sua senha">
+                    <button type="submit" id="btn_login">Entrar</button>
+                    <button type="button" onclick="window.location.href='{{ url_for('cadastro.cadastro') }}'">Cadastro</button>
+                </form>
 
                 {% set mensagem = get_flashed_messages() %}
                 {% if mensagem %}
-                <div>
+                <div class="flash_alert">
                     {{  mensagem[0]  }}
                 </div>
                 {% endif %}
-        </div>
+            </div>
+        </main>
     </div>
 </body>
 </html>

@@ -26,38 +26,78 @@ body {
     padding: 0;
 }
 
+.main-content {
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    flex: 1;
+
+    }
+
+.full-screen-container {
+    width: 100vw;
+    height: 100vh;
+    }
+
+
 .container {
     display: flex;
     min-height: 100vh;
 }
 
+html, body { height: 100%; }
+
 #form_fundo {
     background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
     color: white;
-    padding: 153px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* fill the viewport and center content */
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
+/* Card that holds the login form */
 #form_frente {
-    text-align:center;
+    text-align: left;
+    background: rgb(255, 254, 254, 0);
+    color: var(--dark-text);
+    padding: 28px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    max-width: 520px;
+    width: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    left: 30%;
+    top: 15%;
+}
+
+#form_frente h1, #form_frente h2 {
+    text-align: center;
 }
 
 h1 {
     text-align:center;
-    color: #1a1919;
+    color: #ffffff;
     text-shadow: 2px 3px 2px rgba(0, 0, 0, 0.4);
 }
 
 
 form {
-    display: inline-block;
+    display: block;
+    width: 100%;
 }
 
 label {
     display: block;
     margin: 10px 0 2px;
     font-weight: bold;
-    color: #2b2a2a;
+    color: #fffbfb;
     text-shadow: 2px 3px 2px rgba(0, 0, 0, 0.2);
 }
 
@@ -68,6 +108,35 @@ input {
     box-sizing: border-box;
     border: 1px solid #f5f0f0;
     border-radius: 10px;
+}
+
+/* Buttons: primary full width, secondary full width on small screens */
+/* Primary (submit) button style inside the white card */
+#form_frente button[type="submit"], #btn_login {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+/* Secondary button (ex: Cadastro) */
+#form_frente button[type="button"] {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    background: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+#form_frente button[type="button"]:hover {
+    background: rgba(0,0,0,0.03);
 }
 
 button {
@@ -96,4 +165,188 @@ button:hover {
     padding: 10px;
     border-radius: 5px;
     margin-top: 20px;
+}
+
+
+/* Desktop Grande - 1920px+ */
+@media (min-width: 1920px) {
+    .main-content {
+        padding: 40px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+    }
+
+    .charts-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+
+    .form-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .section-header h2 {
+        font-size: 32px;
+    }
+}
+
+/* Desktop Médio - 1200px a 1919px */
+@media (min-width: 1200px) and (max-width: 1919px) {
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .charts-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Tablet Landscape - 768px a 1199px */
+@media (min-width: 1024px) and (max-width: 1199px) {
+
+    .nav-btn {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .charts-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .data-table {
+        font-size: 13px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 12px 8px;
+    }
+}
+
+/* Mobile Landscape / Tablet Portrait - 768px */
+@media (max-width: 1024px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .logo h1 {
+        font-size: 18px;
+        margin-bottom: 0;
+    }
+
+    #form_frente {
+        text-align: left;
+        background: rgb(255, 254, 254, 0);
+        color: var(--dark-text);
+        padding: 28px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        max-width: 520px;
+        width: 100%;
+        box-sizing: border-box;
+        position: absolute;
+        left: 25%;
+        top: 15%;
+    }
+
+    /* Mobile: hide nav by default and toggle via body.nav-open */
+}
+
+/* Mobile small - ensure card fits and is centered */
+@media (max-width: 480px) {
+    #form_fundo { padding: 12px; }
+    #form_frente { padding: 16px; border-radius: 10px; }
+    input { padding: 10px; }
+    #btn_login { padding: 12px; }
+    /* ensure form content doesn't exceed viewport height */
+    #form_frente { max-height: calc(100vh - 40px); overflow-y: auto; }
+}
+
+/* Large screens (1080p and above) - keep card centered and constrained */
+@media (min-width: 1080px) {
+    #form_fundo { padding: 40px; }
+    #form_frente { max-width: 640px; padding: 36px; }
+}
+
+/* Very large displays - tweak spacing */
+@media (min-width: 1920px) {
+    #form_frente { max-width: 720px; padding: 48px; }
+}
+
+/* Mobile Pequeno - 480px */
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 12px;
+    }
+
+    .section-header h2 {
+        font-size: 20px;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .stat-label {
+        font-size: 11px;
+    }
+
+    .nav-btn {
+        font-size: 11px;
+        padding: 6px 8px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-success, .btn-secondary {
+        flex: 1;
+    }
+
+    .data-table {
+        font-size: 11px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 8px 4px;
+    }
 }

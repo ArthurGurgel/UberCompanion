@@ -10,7 +10,29 @@ def _get_data_automática(data_input):
     """Retorna data automática (hoje) se input vazio"""
     if not data_input or str(data_input).strip() == "":
         return date.today().strftime("%d-%m-%Y")
-    return str(data_input).strip()
+    return _normalize_date(str(data_input).strip())
+
+
+def _normalize_date(s):
+    """Normalize strings like 'dd/mm/YYYY' or 'dd-mm-YYYY' to 'dd-mm-YYYY' with zero padding.
+    Returns the original string if it can't be interpreted."""
+    if not s:
+        return s
+    s = s.replace('/', '-')
+    parts = s.split('-')
+    if len(parts) != 3:
+        return s
+    day, month, year = parts
+    try:
+        d = int(day)
+        m = int(month)
+        y = int(year)
+        dd = str(d).zfill(2)
+        mm = str(m).zfill(2)
+        yyyy = str(y)
+        return f"{dd}-{mm}-{yyyy}"
+    except Exception:
+        return s
 
 class Ganho:
     @staticmethod
@@ -44,7 +66,8 @@ class Ganho:
         
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT id, ganho, kmrodado, mediacar, data, lucro FROM ganhos WHERE user_id = %s ORDER BY data DESC", (user_id,))
+            # Order by actual date (convert stored dd-mm-YYYY to DATE for correct ordering)
+            cursor.execute("SELECT id, ganho, kmrodado, mediacar, data, lucro FROM ganhos WHERE user_id = %s ORDER BY STR_TO_DATE(data, '%d-%m-%Y') DESC", (user_id,))
             resultados = cursor.fetchall()
             resultados = [(r[0], _to_float(r[1]), r[2], _to_float(r[3]), r[4], _to_float(r[5])) for r in resultados]
             cursor.close()
@@ -80,7 +103,8 @@ class Ganho:
         conn = db.conectar()
         if conn is None:
             return False
-        
+        # Normalize incoming date
+        data = _normalize_date(data)
         try:
             cursor = conn.cursor()
             cursor.execute(
@@ -122,6 +146,7 @@ class Ganho:
         
         try:
             cursor = conn.cursor()
+            # mes expected as 'mm-YYYY'
             search_pattern = f"%{mes}%"
             cursor.execute(
                 "SELECT SUM(lucro) FROM ganhos WHERE data LIKE %s AND user_id = %s",
@@ -242,7 +267,7 @@ class Abastecimento:
         conn = db.conectar()
         if conn is None:
             return False
-        
+        data = _normalize_date(data)
         try:
             cursor = conn.cursor()
             cursor.execute(

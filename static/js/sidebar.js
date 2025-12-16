@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Close nav on resize to desktop
+    // Close nav on resize to desktop breakpoint (match CSS: 1024px)
     window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) document.body.classList.remove('nav-open');
+        if (window.innerWidth > 1024) document.body.classList.remove('nav-open');
     });
 });

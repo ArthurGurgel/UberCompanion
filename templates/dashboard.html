@@ -12,9 +12,10 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">
-                <h1>🚗 UberLucro</h1>
-                <p class="version">v2.0 Web</p>
+                <h1>🚗 Uber Companion</h1>
+                <p class="version">Web</p>
             </div>
+            <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Abrir menu">☰</button>
             <nav class="nav-menu">
                 <button class="nav-btn active" data-section="dashboard">
                     📊 Dashboard
@@ -24,6 +25,9 @@
                 </button>
                 <button class="nav-btn" data-section="abastecimentos">
                     ⛽ Abastecimentos
+                </button>
+                <button class="nav-btn" data-section="relatorios">
+                    📈 Relatorios
                 </button>
                 <div class="nav-separator" aria-hidden="true"></div>
                 <div class="nav-separator" aria-hidden="true"></div>
@@ -43,7 +47,6 @@
             <!-- Dashboard Section -->
             <section id="dashboard" class="section active">
                 <div class="section-header">
-                    <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Abrir menu">☰</button>
                     <h2>Dashboard</h2>
                     <a class="btn btn-primary" href="{{ url_for('login.profile') }}">👤 Perfil</a>
                 </div>
@@ -81,23 +84,6 @@
                         <h3>Ganhos por Semana (mês atual)</h3>
                         <canvas id="semanas-chart"></canvas>
                     </div>
-                </div>
-
-                <div class="recent-section">
-                    <h3>📋 Últimos Ganhos</h3>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Ganho</th>
-                                <th>KM</th>
-                                <th>Lucro</th>
-                            </tr>
-                        </thead>
-                        <tbody id="recent-ganhos">
-                            <tr><td colspan="4" class="empty-message">Carregando...</td></tr>
-                        </tbody>
-                    </table>
                 </div>
             </section>
 
@@ -139,10 +125,10 @@
                 </form>
 
                 <div class="list-section">
+                    </div>
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Data</th>
                                 <th>Ganho</th>
                                 <th>KM</th>
@@ -152,9 +138,19 @@
                             </tr>
                         </thead>
                         <tbody id="ganhos-list">
-                            <tr><td colspan="7" class="empty-message">Carregando...</td></tr>
+                            <tr><td colspan="6" class="empty-message">Carregando...</td></tr>
                         </tbody>
                     </table>
+                    <div class="table-controls">
+                        <label for="ganhos-page-size">Mostrar</label>
+                        <select id="ganhos-page-size" class="page-size-select">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                        <span id="ganhos-info" class="table-info"></span>
+                        <div id="ganhos-pagination" class="pagination" aria-label="Paginação Ganhos"></div>
+ 
                 </div>
             </section>
 
@@ -194,7 +190,6 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Data</th>
                                 <th>Custo</th>
                                 <th>Custo/L</th>
@@ -203,9 +198,19 @@
                             </tr>
                         </thead>
                         <tbody id="abastecimentos-list">
-                            <tr><td colspan="6" class="empty-message">Carregando...</td></tr>
+                            <tr><td colspan="5" class="empty-message">Carregando...</td></tr>
                         </tbody>
                     </table>
+                    <div class="table-controls">
+                        <label for="abastecimentos-page-size">Mostrar</label>
+                        <select id="abastecimentos-page-size" class="page-size-select">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                        <span id="abastecimentos-info" class="table-info"></span>
+                        <div id="abastecimentos-pagination" class="pagination" aria-label="Paginação Abastecimentos"></div>
+                    </div>
                 </div>
             </section>
 

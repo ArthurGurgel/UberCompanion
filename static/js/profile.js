@@ -1,21 +1,24 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const showBtn = document.getElementById('show-password');
+document.addEventListener('DOMContentLoaded', function(){
+    const showPwd = document.getElementById('show-password');
     const backBtn = document.getElementById('back-to-profile');
     const profileSection = document.getElementById('profile-section');
     const passwordSection = document.getElementById('password-section');
 
-    function showPasswordForm() {
+    function toggleToPassword() {
         if (profileSection) profileSection.classList.add('hidden');
         if (passwordSection) passwordSection.classList.remove('hidden');
-        if (passwordSection) passwordSection.scrollIntoView({ behavior: 'smooth' });
+        // focus first input
+        const first = passwordSection.querySelector('input');
+        if (first) first.focus();
     }
 
-    function showProfileForm() {
+    function toggleToProfile() {
         if (passwordSection) passwordSection.classList.add('hidden');
         if (profileSection) profileSection.classList.remove('hidden');
-        if (profileSection) profileSection.scrollIntoView({ behavior: 'smooth' });
+        const first = profileSection.querySelector('input');
+        if (first) first.focus();
     }
 
-    if (showBtn) showBtn.addEventListener('click', showPasswordForm);
-    if (backBtn) backBtn.addEventListener('click', showProfileForm);
+    if (showPwd) showPwd.addEventListener('click', toggleToPassword);
+    if (backBtn) backBtn.addEventListener('click', toggleToProfile);
 });

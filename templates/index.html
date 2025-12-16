@@ -13,6 +13,7 @@
             <div class="logo">
                 <h1>🚗 UberLucro</h1>
             </div>
+            <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Abrir menu">☰</button>
             <nav class="nav-menu">
                 <button class="nav-btn active" data-section="dashboard">
                     📊 Dashboard
@@ -118,7 +119,6 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Data</th>
                                 <th>Ganho</th>
                                 <th>KM</th>
@@ -128,7 +128,7 @@
                             </tr>
                         </thead>
                         <tbody id="ganhos-list">
-                            <tr><td colspan="7" class="empty-message">Carregando...</td></tr>
+                            <tr><td colspan="6" class="empty-message">Carregando...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -172,7 +172,6 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Data</th>
                                 <th>Custo</th>
                                 <th>Custo/L</th>
@@ -181,7 +180,7 @@
                             </tr>
                         </thead>
                         <tbody id="abastecimentos-list">
-                            <tr><td colspan="6" class="empty-message">Carregando...</td></tr>
+                            <tr><td colspan="5" class="empty-message">Carregando...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -190,5 +189,6 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
 </body>
 </html>

@@ -272,7 +272,6 @@ def do_login():
         # salvar no session e redirecionar para dashboard
         session['user'] = user['usuario']
         session['user_id'] = user['id']
-        flash('Login efetuado com sucesso')
         return redirect(url_for('dashboard.index'))
 
     flash('Usuário ou senha inválidos')
